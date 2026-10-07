@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#F6F5FA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15131E" media="(prefers-color-scheme: dark)">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
-<title>Квизы Ижевска в октябре</title>
+<title>Квизы Ижевска</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap">
@@ -64,16 +64,15 @@ h1{font-family:"Unbounded","Onest",system-ui,sans-serif;font-weight:700;font-siz
 .fr[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 3px 0 var(--c)}
 
 .filters{background:var(--surface);border:1px solid var(--line);border-radius:12px}
-.fbar{display:flex;align-items:flex-start;gap:8px;padding-inline:4px 12px;min-width:0}
-.fbar .reset{margin-top:10px;flex:none}
-.ftoggle{appearance:none;flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;border:0;background:none;color:var(--ink);font:inherit;font-weight:600;font-size:15px;padding:12px 10px;cursor:pointer;text-align:left;border-radius:10px}
+.fbar{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;column-gap:6px;padding-inline:4px 16px;min-width:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.fbar .reset{justify-self:start;padding-block:8px}
+.ftoggle{appearance:none;display:inline-flex;align-items:center;gap:8px;border:0;background:none;color:var(--ink);font:inherit;font-weight:600;font-size:15px;padding:12px 10px;cursor:pointer;text-align:left;border-radius:10px}
 .fcount{font-size:12px;font-weight:600;background:var(--ink);color:var(--bg);border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}
-.fsum{order:5;flex-basis:100%;min-width:0;font-weight:400;font-size:13px;line-height:1.35;color:var(--ink-2);white-space:normal;overflow-wrap:anywhere}
+.fsum{grid-column:1 / -1;padding:0 10px 12px;margin-top:-4px;min-width:0;font-weight:400;font-size:13px;line-height:1.35;color:var(--ink-2);white-space:normal;overflow-wrap:anywhere}
 .fsum:empty{display:none}
-.chev{margin-left:auto;font-size:12px;color:var(--ink-3);transition:transform .2s}
-.ftoggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.chev{grid-column:4;font-size:12px;color:var(--ink-3);transition:transform .2s;padding:12px 0}
+.fbar.open .chev{transform:rotate(180deg)}
 .controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;border-top:1px solid var(--line);padding:12px 14px}
-.mob-only{display:none!important}
 html{-webkit-text-size-adjust:100%}
 [hidden]{display:none!important}
 .group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -118,10 +117,6 @@ input[type="checkbox"]{accent-color:var(--focus);width:16px;height:16px}
 table{width:100%;border-collapse:collapse;min-width:760px}
 th,td{text-align:left;padding:10px 14px;vertical-align:top}
 thead th{position:sticky;top:0;background:var(--surface-2);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
-thead th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
-thead th button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
-thead th .arr{opacity:.35;font-size:11px}
-thead th[aria-sort] .arr{opacity:1}
 tbody tr{border-top:1px solid var(--line)}
 tbody tr.newday{border-top:2px solid var(--line)}
 tbody tr.newday:first-child, tbody tr.dayrow:first-child + tr.newday{border-top:0}
@@ -163,7 +158,6 @@ td.venue{white-space:nowrap}
   .fr{grid-template-columns:auto 1fr;column-gap:10px;align-items:center;padding:10px 12px}
   .fr .n{font-size:20px}
   .fr .sub{display:none}
-  .mob-only{display:flex!important}
   .controls{gap:14px}
   .group{width:100%}
   .group > .lbl{width:100%;margin:0}
@@ -209,28 +203,18 @@ td.venue{white-space:nowrap}
 <div class="wrap">
   <header>
     <div class="eyebrow">Ижевск · октябрь 2026</div>
-    <h1>Квизы Ижевска в октябре</h1>
-    <p class="lead">Сводное расписание четырёх франшиз: Ре-квиз-ит, Шейкер квиз, ВАУ квиз и Смузи. <span class="desk">Нажмите на франшизу, тип игры, дату или дни недели, чтобы отфильтровать список. Типы и дни можно выбирать по несколько.</span></p>
   </header>
 
   <div class="franchises" id="frBox"></div>
 
   <div class="filters">
-  <div class="fbar">
-    <button class="ftoggle" id="fToggle" type="button" aria-expanded="true" aria-controls="controls">Фильтры <span class="fcount" id="fCount" hidden></span><span class="fsum" id="fSum"></span><span class="chev">▼</span></button>
+  <div class="fbar" id="fbar">
+    <button class="ftoggle" id="fToggle" type="button" aria-expanded="true" aria-controls="controls">Фильтры <span class="fcount" id="fCount" hidden></span></button>
     <button class="reset" id="reset2" type="button" hidden>Сбросить</button>
+    <span class="chev" aria-hidden="true">▼</span>
+    <span class="fsum" id="fSum"></span>
   </div>
   <div class="controls" id="controls">
-    <div class="group mob-only">
-      <span class="lbl">Сортировка</span>
-      <select id="sortSel" aria-label="Сортировка">
-        <option value="date">По дате и времени</option>
-        <option value="fr">По франшизе</option>
-        <option value="venue">По площадке</option>
-        <option value="type">По типу игры</option>
-        <option value="game">По названию</option>
-      </select>
-    </div>
     <div class="group" id="typeBox"><span class="lbl">Тип</span></div>
     <div class="group cal-wrap">
       <span class="lbl">Дата</span>
@@ -265,11 +249,11 @@ td.venue{white-space:nowrap}
     <table id="tbl">
       <thead>
         <tr>
-          <th data-k="date"><button type="button">Дата <span class="arr">▲</span></button></th>
-          <th data-k="fr"><button type="button">Франшиза <span class="arr">▲</span></button></th>
-          <th data-k="game"><button type="button">Игра <span class="arr">▲</span></button></th>
-          <th data-k="venue"><button type="button">Где <span class="arr">▲</span></button></th>
-          <th data-k="type"><button type="button">Тип <span class="arr">▲</span></button></th>
+          <th>Дата</th>
+          <th>Франшиза</th>
+          <th>Игра</th>
+          <th>Где</th>
+          <th>Тип</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>
@@ -278,10 +262,8 @@ td.venue{white-space:nowrap}
   </div>
 
   <div class="foot">
-    <span>Данные перенесены с афиш франшиз. Перед походом сверяйте время и место на сайтах: <a href="https://requizit.ru" target="_blank" rel="noopener">requizit.ru</a>, группы Шейкер квиз, ВАУ квиз и Смузи.</span>
-    <span>Смузи: 2,5 часа, 75–155 вопросов, 550 ₽ с человека.</span>
+    <span>Данные перенесены с афиш франшиз. Перед походом сверяйте время и место на сайтах и в группах франшиз.</span>
     <span>Прошедшие игры скрываются через 2,5 часа после начала. Чтобы увидеть их, нажмите «Показать прошедшие» или выберите прошедшую дату в календаре.</span>
-    <span>Пометка «лёгкая» стоит у игр с пометками Лайт, Суперлайт, Проще некуда, Суперлёгкая, Очень лёгкие.</span>
   </div>
 </div>
 
@@ -451,7 +433,7 @@ const DATA = RAW.map(([d,t,fr,game,sub,venue,type],i)=>{
     end: new Date(2026,9,d,parseInt(t),parseInt(t.slice(3))).getTime() + GAME_MS};
 });
 
-const state = {fr:ALL_FR(), type:new Set(), wd:new Set(), dates:new Set(), venue:"", q:"", sort:"date", dir:1, showPast:false};
+const state = {fr:ALL_FR(), type:new Set(), wd:new Set(), dates:new Set(), venue:"", q:"", showPast:false};
 
 // Франшизы
 const frBox = document.getElementById("frBox");
@@ -512,7 +494,7 @@ Object.keys(venues).sort((a,b)=>venues[b]-venues[a]).forEach(v=>{
 venueSel.onchange = ()=>{state.venue=venueSel.value; render();};
 document.getElementById("q").oninput = e=>{state.q=e.target.value.trim().toLowerCase(); render();};
 function resetAll(){
-  Object.assign(state,{fr:ALL_FR(),type:new Set(),wd:new Set(),dates:new Set(),venue:"",q:"",sort:"date",dir:1,showPast:false});
+  Object.assign(state,{fr:ALL_FR(),type:new Set(),wd:new Set(),dates:new Set(),venue:"",q:"",showPast:false});
   venueSel.value=""; document.getElementById("q").value="";
   render();
 }
@@ -521,13 +503,12 @@ document.getElementById("reset2").onclick = resetAll;
 const pastBtn = document.getElementById("pastBtn");
 function togglePast(){ state.showPast = !state.showPast; render(); }
 pastBtn.onclick = togglePast;
-const sortSel = document.getElementById("sortSel");
-sortSel.onchange = ()=>{ state.sort = sortSel.value; state.dir = 1; render(); };
 
 // Сворачивание фильтров
 const fToggle = document.getElementById("fToggle"), controls = document.getElementById("controls");
 function setFilters(open, save){
   controls.hidden = !open; fToggle.setAttribute("aria-expanded", open);
+  document.getElementById("fbar").classList.toggle("open", open);
   if (save) { try { localStorage.setItem("filtersOpen", open ? "1" : "0"); } catch(e){} }
 }
 (function initFilters(){
@@ -536,7 +517,11 @@ function setFilters(open, save){
   const isPhone = window.matchMedia("(max-width:640px)").matches;
   setFilters(saved===null ? !isPhone : saved==="1", false);
 })();
-fToggle.onclick = ()=> setFilters(controls.hidden, true);
+// вся полоса сворачивает/разворачивает фильтры, кроме кнопки «Сбросить»
+document.getElementById("fbar").addEventListener("click", e=>{
+  if (e.target.closest("#reset2")) return;
+  setFilters(controls.hidden, true);
+});
 
 function activeFilters(){
   const parts = [];
@@ -596,26 +581,10 @@ function updateCal(){
   calBtn.setAttribute("aria-pressed",state.dates.size>0);
 }
 
-// Сортировка
-document.querySelectorAll("thead th").forEach(th=>{
-  th.querySelector("button").onclick = ()=>{
-    const k = th.dataset.k;
-    if (state.sort===k) state.dir*=-1; else {state.sort=k; state.dir=1;}
-    render();
-  };
-});
 
 const esc = s => s.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function cmp(a,b){
-  const s=state.sort; let r=0;
-  if (s==="fr") r = FR_ORDER[a.fr]-FR_ORDER[b.fr];
-  else if (s==="game") r = (a.game+a.sub).localeCompare(b.game+b.sub,"ru");
-  else if (s==="venue") r = a.venue.localeCompare(b.venue,"ru");
-  else if (s==="type") r = TYPES[a.type].name.localeCompare(TYPES[b.type].name,"ru");
-  if (r===0 && s!=="date") return a.key-b.key || FR_ORDER[a.fr]-FR_ORDER[b.fr];
-  if (s==="date") r = a.key-b.key || FR_ORDER[a.fr]-FR_ORDER[b.fr];
-  return r*state.dir;
-}
+// всегда по дате и времени, внутри одного времени — по франшизе
+function cmp(a,b){ return a.key-b.key || FR_ORDER[a.fr]-FR_ORDER[b.fr]; }
 
 function passes(x,ignoreDate,ignorePast){
   // прошедшие видны, если включён переключатель или эта дата выбрана в календаре
@@ -631,11 +600,6 @@ function render(){
   document.querySelectorAll(".fr").forEach(b=>b.setAttribute("aria-pressed", state.fr.has(b.dataset.f)));
   document.querySelectorAll("#typeBox .chip").forEach(b=>b.setAttribute("aria-pressed", state.type.has(b.dataset.t)));
   document.querySelectorAll("#wdBox .chip").forEach(b=>b.setAttribute("aria-pressed", state.wd.has(+b.dataset.w)));
-  document.querySelectorAll("thead th").forEach(th=>{
-    const on = th.dataset.k===state.sort;
-    if (on) th.setAttribute("aria-sort", state.dir>0?"ascending":"descending"); else th.removeAttribute("aria-sort");
-    th.querySelector(".arr").textContent = on && state.dir<0 ? "▼" : "▲";
-  });
 
   updateCal();
   pastBtn.setAttribute("aria-pressed", state.showPast);
@@ -643,20 +607,19 @@ function render(){
     const k=b.dataset.f;
     b.querySelector(".n").textContent = DATA.filter(x=>x.fr===k && (state.showPast || !isPast(x))).length;
   });
-  sortSel.value = state.sort;
   const act = activeFilters();
   const fc = document.getElementById("fCount");
   fc.hidden = !act.length; fc.textContent = act.length;
   document.getElementById("fSum").textContent = act.join(" · ");
   document.getElementById("reset2").hidden = !act.length;
-  document.getElementById("tbl").classList.toggle("bydate", state.sort==="date");
+  document.getElementById("tbl").classList.add("bydate");
   const list = DATA.filter(x=>passes(x)).sort(cmp);
   const perDay = {}; list.forEach(x=>perDay[x.d]=(perDay[x.d]||0)+1);
 
   const tb = document.getElementById("rows");
   let prevDay = null, html = "";
   for (const x of list){
-    const byDate = state.sort==="date";
+    const byDate = true;
     const repeat = byDate && x.d===prevDay;
     const newday = byDate && x.d!==prevDay;
     prevDay = x.d;
