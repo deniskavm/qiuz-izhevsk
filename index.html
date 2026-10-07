@@ -102,6 +102,7 @@ input[type="checkbox"]{accent-color:var(--focus);width:16px;height:16px}
 .cal-day.zero{background:transparent;color:var(--ink-3)}
 .cal-day.zero .dn{font-weight:400}
 .cal-day.today{border-color:var(--focus)}
+.cal-day.past:not([aria-pressed="true"]){opacity:.4}
 .cal-day[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .cal-day[aria-pressed="true"] .dc{color:var(--bg);opacity:.75}
 .cal-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -126,6 +127,10 @@ tbody tr.newday{border-top:2px solid var(--line)}
 tbody tr.newday:first-child, tbody tr.dayrow:first-child + tr.newday{border-top:0}
 tbody tr:hover{background:var(--surface-2)}
 tr.dayrow{display:none}
+tbody tr.past td{opacity:.5}
+.tag.done{border-color:transparent;background:var(--surface-2)}
+.wd.today{color:var(--focus);font-weight:600}
+.linkbtn{appearance:none;border:0;background:none;font:inherit;color:var(--focus);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
 td.date{white-space:nowrap;font-variant-numeric:tabular-nums;width:1%}
 .d{font-weight:700;font-size:16px}
 .wd{color:var(--ink-3);font-size:13px;margin-left:4px}
@@ -164,7 +169,7 @@ td.venue{white-space:nowrap}
   .group > .lbl{width:100%;margin:0}
   select,input[type="search"]{font-size:16px;width:100%;padding:9px 12px}
   .chip{font-size:14px;padding:6px 12px}
-  .cal-btn{width:100%;justify-content:space-between}
+  .cal-btn{flex:1;justify-content:space-between}
   label.check{font-size:15px}
 
   .table-box{overflow:visible;background:none;border:0;border-radius:0}
@@ -191,6 +196,9 @@ td.venue{white-space:nowrap}
   tr.dayrow td{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:16px}
   tr.dayrow td span{font-weight:400;font-size:13px;color:var(--ink-3)}
   tr.dayrow td.we{color:var(--rq)}
+  tr.dayrow td.today{color:var(--focus)}
+  tbody tr.past{opacity:.55}
+  tbody tr.past td{opacity:1}
   .empty{background:var(--surface);border:1px solid var(--line);border-radius:12px}
 }
 @media (max-width:640px){.cal-pop{position:fixed;left:16px;right:16px;top:auto;bottom:calc(16px + env(safe-area-inset-bottom, 0px));width:auto;max-width:none}}
@@ -227,6 +235,7 @@ td.venue{white-space:nowrap}
     <div class="group cal-wrap">
       <span class="lbl">Дата</span>
       <button class="chip cal-btn" id="calBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="calPop"><span id="calLabel">Все даты</span><span class="car">▼</span></button>
+      <button class="chip" id="pastBtn" type="button" aria-pressed="false">Показать прошедшие</button>
       <div class="cal-pop" id="calPop" hidden>
         <div class="cal-head">Октябрь 2026 <small>число — игр в этот день</small></div>
         <div class="cal-grid" id="calGrid"></div>
@@ -242,14 +251,13 @@ td.venue{white-space:nowrap}
       <span class="lbl">Где</span>
       <select id="venue" aria-label="Площадка"><option value="">Все площадки</option></select>
     </div>
-    <label class="check"><input type="checkbox" id="easy"> Только лёгкие</label>
     <div class="group search"><input type="search" id="q" placeholder="Поиск по названию" aria-label="Поиск по названию"></div>
     <button class="reset" id="reset" type="button">Сбросить фильтры</button>
   </div>
   </div>
 
   <div class="meta">
-    <span>Показано <b id="shown">0</b> из <b id="total">0</b> игр</span>
+    <span>Показано <b id="shown">0</b> из <b id="total">0</b> игр<span id="pastInfo"></span></span>
     <span id="daysInfo"></span>
   </div>
 
@@ -266,13 +274,14 @@ td.venue{white-space:nowrap}
       </thead>
       <tbody id="rows"></tbody>
     </table>
-    <div class="empty" id="empty" hidden>Нет игр под эти фильтры. Попробуйте сбросить часть условий.</div>
+    <div class="empty" id="empty" hidden></div>
   </div>
 
   <div class="foot">
     <span>Данные перенесены с афиш франшиз. Перед походом сверяйте время и место на сайтах: <a href="https://requizit.ru" target="_blank" rel="noopener">requizit.ru</a>, группы Шейкер квиз, ВАУ квиз и Смузи.</span>
     <span>Смузи: 2,5 часа, 75–155 вопросов, 550 ₽ с человека.</span>
-    <span>«Лёгкие» — игры с пометками Лайт, Суперлайт, Проще некуда, Суперлёгкая, Очень лёгкие.</span>
+    <span>Прошедшие игры скрываются через 2,5 часа после начала. Чтобы увидеть их, нажмите «Показать прошедшие» или выберите прошедшую дату в календаре.</span>
+    <span>Пометка «лёгкая» стоит у игр с пометками Лайт, Суперлайт, Проще некуда, Суперлёгкая, Очень лёгкие.</span>
   </div>
 </div>
 
@@ -428,6 +437,8 @@ const RAW = [
 const EASY_RE = /лайт|проще некуда|суперл[её]гк|очень л[её]гк/i;
 const FR_ORDER = {rq:0, sh:1, wow:2, sm:3};
 const ALL_FR = () => new Set(Object.keys(FR));
+const GAME_MS = 150*60*1000; // игра идёт около 2,5 часов
+const isPast = x => x.end < Date.now();
 const DATA = RAW.map(([d,t,fr,game,sub,venue,type],i)=>{
   const wd = new Date(2026,9,d).getDay();
   const full = game + " " + sub;
@@ -436,10 +447,11 @@ const DATA = RAW.map(([d,t,fr,game,sub,venue,type],i)=>{
     family: /семейн/i.test(full),
     champ: /чемпионат/i.test(full),
     adult: /18\+/.test(full),
-    key: d*10000 + parseInt(t)*100 + parseInt(t.slice(3))};
+    key: d*10000 + parseInt(t)*100 + parseInt(t.slice(3)),
+    end: new Date(2026,9,d,parseInt(t),parseInt(t.slice(3))).getTime() + GAME_MS};
 });
 
-const state = {fr:ALL_FR(), type:new Set(), wd:new Set(), dates:new Set(), venue:"", easy:false, q:"", sort:"date", dir:1};
+const state = {fr:ALL_FR(), type:new Set(), wd:new Set(), dates:new Set(), venue:"", q:"", sort:"date", dir:1, showPast:false};
 
 // Франшизы
 const frBox = document.getElementById("frBox");
@@ -469,6 +481,18 @@ for (const k of Object.keys(TYPES)){
   b.onclick = ()=>{ toggle(state.type,k); render(); };
   typeBox.appendChild(b);
 }
+// «Чемпионат» — не отдельный тип, а пометка: собираем все игры-чемпионаты
+{
+  const n = DATA.filter(x=>x.champ).length;
+  const b = document.createElement("button");
+  b.className="chip"; b.type="button"; b.dataset.t="champ"; b.setAttribute("aria-pressed","false");
+  b.style.setProperty("--c","var(--sh)");
+  b.innerHTML = `<span class="dot"></span>Чемпионат`;
+  b.title = `Игры с пометкой «чемпионат»: ${n}`;
+  b.onclick = ()=>{ toggle(state.type,"champ"); render(); };
+  typeBox.appendChild(b);
+}
+const typeName = k => k==="champ" ? "чемпионат" : TYPES[k].name[0].toLowerCase()+TYPES[k].name.slice(1);
 // Дни недели
 const wdBox = document.getElementById("wdBox");
 [1,2,3,4,5,6,0].forEach(k=>{
@@ -486,15 +510,17 @@ Object.keys(venues).sort((a,b)=>venues[b]-venues[a]).forEach(v=>{
   const o=document.createElement("option"); o.value=v; o.textContent=`${v} (${venues[v]})`; venueSel.appendChild(o);
 });
 venueSel.onchange = ()=>{state.venue=venueSel.value; render();};
-document.getElementById("easy").onchange = e=>{state.easy=e.target.checked; render();};
 document.getElementById("q").oninput = e=>{state.q=e.target.value.trim().toLowerCase(); render();};
 function resetAll(){
-  Object.assign(state,{fr:ALL_FR(),type:new Set(),wd:new Set(),dates:new Set(),venue:"",easy:false,q:"",sort:"date",dir:1});
-  venueSel.value=""; document.getElementById("easy").checked=false; document.getElementById("q").value="";
+  Object.assign(state,{fr:ALL_FR(),type:new Set(),wd:new Set(),dates:new Set(),venue:"",q:"",sort:"date",dir:1,showPast:false});
+  venueSel.value=""; document.getElementById("q").value="";
   render();
 }
 document.getElementById("reset").onclick = resetAll;
 document.getElementById("reset2").onclick = resetAll;
+const pastBtn = document.getElementById("pastBtn");
+function togglePast(){ state.showPast = !state.showPast; render(); }
+pastBtn.onclick = togglePast;
 const sortSel = document.getElementById("sortSel");
 sortSel.onchange = ()=>{ state.sort = sortSel.value; state.dir = 1; render(); };
 
@@ -515,12 +541,12 @@ fToggle.onclick = ()=> setFilters(controls.hidden, true);
 function activeFilters(){
   const parts = [];
   if (state.fr.size !== Object.keys(FR).length) parts.push([...state.fr].map(k=>FR[k].name).join(", "));
-  if (state.type.size) parts.push([...state.type].map(k=>TYPES[k].name[0].toLowerCase()+TYPES[k].name.slice(1)).join(", "));
+  if (state.type.size) parts.push([...state.type].map(typeName).join(", "));
   if (state.dates.size) parts.push(calLabel());
   if (state.wd.size) parts.push([1,2,3,4,5,6,0].filter(k=>state.wd.has(k)).map(k=>WD[k]).join(", "));
   if (state.venue) parts.push(state.venue);
-  if (state.easy) parts.push("лёгкие");
   if (state.q) parts.push("«"+state.q+"»");
+  if (state.showPast) parts.push("с прошедшими");
   return parts;
 }
 // Календарь
@@ -556,14 +582,15 @@ function calLabel(){
 }
 function updateCal(){
   // считаем игры по дням с учётом всех фильтров, кроме даты
-  const cnt={};
-  DATA.forEach(x=>{ if(passes(x,true)) cnt[x.d]=(cnt[x.d]||0)+1; });
+  const cnt={}, upcoming={};
+  DATA.forEach(x=>{ if(passes(x,true,true)){ cnt[x.d]=(cnt[x.d]||0)+1; } if(!isPast(x)) upcoming[x.d]=1; });
   calGrid.querySelectorAll(".cal-day").forEach(b=>{
     const d=+b.dataset.d, n=cnt[d]||0;
     b.setAttribute("aria-pressed",state.dates.has(d));
     b.classList.toggle("zero",!n);
+    b.classList.toggle("past",!upcoming[d]);
     b.querySelector(".dc").textContent=n||"·";
-    b.setAttribute("aria-label",`${d} октября, игр: ${n}`);
+    b.setAttribute("aria-label",`${d} октября, игр: ${n}${upcoming[d]?"":", прошли"}`);
   });
   document.getElementById("calLabel").textContent=calLabel();
   calBtn.setAttribute("aria-pressed",state.dates.size>0);
@@ -590,13 +617,14 @@ function cmp(a,b){
   return r*state.dir;
 }
 
-function passes(x,ignoreDate){
-  return state.fr.has(x.fr) &&
-    (!state.type.size || state.type.has(x.type)) &&
+function passes(x,ignoreDate,ignorePast){
+  // прошедшие видны, если включён переключатель или эта дата выбрана в календаре
+  const pastOk = ignorePast || state.showPast || !isPast(x) || (!ignoreDate && state.dates.has(x.d));
+  return pastOk && state.fr.has(x.fr) &&
+    (!state.type.size || state.type.has(x.type) || (state.type.has("champ") && x.champ)) &&
     (!state.wd.size || state.wd.has(x.wd)) &&
     (ignoreDate || !state.dates.size || state.dates.has(x.d)) &&
     (!state.venue || x.venue===state.venue) &&
-    (!state.easy || x.easy) &&
     (!state.q || (x.game+" "+x.sub+" "+x.venue).toLowerCase().includes(state.q));
 }
 function render(){
@@ -610,6 +638,11 @@ function render(){
   });
 
   updateCal();
+  pastBtn.setAttribute("aria-pressed", state.showPast);
+  document.querySelectorAll(".fr").forEach(b=>{
+    const k=b.dataset.f;
+    b.querySelector(".n").textContent = DATA.filter(x=>x.fr===k && (state.showPast || !isPast(x))).length;
+  });
   sortSel.value = state.sort;
   const act = activeFilters();
   const fc = document.getElementById("fCount");
@@ -628,10 +661,12 @@ function render(){
     const newday = byDate && x.d!==prevDay;
     prevDay = x.d;
     const we = x.wd===0||x.wd===6;
-    const tags = [x.easy?'<span class="tag">лёгкая</span>':"", x.family?'<span class="tag">семейная</span>':"", x.champ?'<span class="tag">чемпионат</span>':"", x.adult?'<span class="tag">18+</span>':""].join("");
-    if (newday) html += `<tr class="dayrow"><td colspan="5" class="${we?"we":""}">${WD_FULL[x.wd]}, ${x.d} октября<span>${perDay[x.d]} ${plural(perDay[x.d],"игра","игры","игр")}</span></td></tr>`;
-    html += `<tr class="${repeat?"repeat":""} ${newday?"newday":""}">
-      <td class="date"><span class="d">${x.d} окт</span><span class="wd ${we?"we":""}">${WD[x.wd]}</span><span class="tm">${x.t}</span></td>
+    const past = isPast(x);
+    const rel = relDay(x.d);
+    const tags = [x.easy?'<span class="tag">лёгкая</span>':"", x.family?'<span class="tag">семейная</span>':"", x.champ?'<span class="tag">чемпионат</span>':"", x.adult?'<span class="tag">18+</span>':"", past?'<span class="tag done">прошла</span>':""].join("");
+    if (newday) html += `<tr class="dayrow"><td colspan="5" class="${rel==="Сегодня"?"today":we?"we":""}">${rel?rel+", "+WD_FULL[x.wd].toLowerCase():WD_FULL[x.wd]}, ${x.d} октября<span>${perDay[x.d]} ${plural(perDay[x.d],"игра","игры","игр")}</span></td></tr>`;
+    html += `<tr class="${repeat?"repeat":""} ${newday?"newday":""} ${past?"past":""}">
+      <td class="date"><span class="d">${x.d} окт</span><span class="wd ${rel==="Сегодня"?"today":we?"we":""}">${rel==="Сегодня"?"сегодня":rel==="Завтра"?"завтра":WD[x.wd]}</span><span class="tm">${x.t}</span></td>
       <td class="frc"><span class="fb ${x.fr}">${FR[x.fr].name}</span></td>
       <td class="game"><span class="t">${esc(x.game)}</span>${tags?`<span class="tags">${tags}</span>`:""}${x.sub?`<div class="s">${esc(x.sub)}</div>`:""}</td>
       <td class="venue">${esc(x.venue)}</td>
@@ -639,12 +674,29 @@ function render(){
     </tr>`;
   }
   tb.innerHTML = html;
-  document.getElementById("empty").hidden = list.length>0;
+  const hiddenPast = state.showPast ? 0 : DATA.filter(x=>isPast(x) && passes(x,false,true) && !passes(x)).length;
+  const pi = document.getElementById("pastInfo");
+  pi.innerHTML = hiddenPast ? ` · ${hiddenPast} ${plural(hiddenPast,"прошедшая скрыта","прошедшие скрыты","прошедших скрыто")} <button class="linkbtn" type="button" id="pastShow">показать</button>` : "";
+  if (hiddenPast) document.getElementById("pastShow").onclick = togglePast;
+  const empty = document.getElementById("empty");
+  empty.hidden = list.length>0;
+  if (!list.length) empty.innerHTML = hiddenPast
+    ? `Подходящие игры уже прошли. <button class="linkbtn" type="button" id="emptyPast">Показать прошедшие</button>`
+    : "Нет игр под эти фильтры. Попробуйте сбросить часть условий.";
+  const ep = document.getElementById("emptyPast"); if (ep) ep.onclick = togglePast;
   document.getElementById("shown").textContent = list.length;
   document.getElementById("total").textContent = DATA.length;
   const days = new Set(list.map(x=>x.d)).size;
   document.getElementById("daysInfo").textContent = list.length ? `${days} ${plural(days,"день","дня","дней")} с играми` : "";
 }
+function relDay(d){
+  const now = new Date(), t = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const diff = Math.round((new Date(2026,9,d).getTime() - t) / 86400000);
+  return diff===0 ? "Сегодня" : diff===1 ? "Завтра" : "";
+}
+// раз в минуту проверяем, не закончилась ли какая-нибудь игра
+let lastPast = DATA.filter(isPast).length;
+setInterval(()=>{ const n = DATA.filter(isPast).length; if (n!==lastPast){ lastPast=n; render(); } }, 60000);
 function plural(n,a,b,c){const m=n%10,h=n%100; if(m===1&&h!==11)return a; if(m>=2&&m<=4&&(h<12||h>14))return b; return c;}
 render();
 </script>
