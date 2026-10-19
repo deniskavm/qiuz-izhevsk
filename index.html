@@ -19,6 +19,7 @@
   --sh:#B07D00; --sh-soft:#FFF1C7;
   --wow:#B8157F; --wow-soft:#F9E0F0;
   --sm:#6D28D9; --sm-soft:#EDE5FF;
+  --bf:#13804F; --bf-soft:#DDF3E6;
   --t-gen:#3A6FD8; --t-mus:#C2410C; --t-kino:#7C3AED; --t-nost:#8B5E34; --t-them:#0E7490; --t-spec:#475569;
 }
 @media (prefers-color-scheme: dark){
@@ -31,6 +32,7 @@
     --sh:#F2C230; --sh-soft:#352C12;
     --wow:#F062BF; --wow-soft:#3A1832;
     --sm:#B39BFF; --sm-soft:#2C2248;
+    --bf:#4FD08F; --bf-soft:#163527;
     --t-gen:#7FA6FF; --t-mus:#FF8A4C; --t-kino:#B79BFF; --t-nost:#D2A679; --t-them:#4FC3DC; --t-spec:#A7B3C5;
   }
 }
@@ -43,6 +45,7 @@
   --sh:#F2C230; --sh-soft:#352C12;
   --wow:#F062BF; --wow-soft:#3A1832;
   --sm:#B39BFF; --sm-soft:#2C2248;
+  --bf:#4FD08F; --bf-soft:#163527;
   --t-gen:#7FA6FF; --t-mus:#FF8A4C; --t-kino:#B79BFF; --t-nost:#D2A679; --t-them:#4FC3DC; --t-spec:#A7B3C5;
 }
 *{box-sizing:border-box}
@@ -53,14 +56,14 @@ header{display:grid;gap:6px}
 h1{font-family:"Unbounded","Onest",system-ui,sans-serif;font-weight:700;font-size:clamp(26px,4.4vw,40px);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
 .lead{color:var(--ink-2);margin:0;max-width:65ch}
 
-.franchises{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.franchises{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
 .fr{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 14px;text-align:left;cursor:pointer;display:grid;gap:2px;font:inherit;transition:border-color .15s,background .15s}
 .fr:hover{border-color:var(--ink-3)}
 .fr[aria-pressed="false"]{opacity:.5}
 .fr .n{font-family:"Unbounded","Onest",sans-serif;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums;color:var(--c)}
 .fr .nm{font-weight:600}
 .fr .sub{font-size:12.5px;color:var(--ink-3)}
-.fr[data-f="rq"]{--c:var(--rq)} .fr[data-f="sh"]{--c:var(--sh)} .fr[data-f="wow"]{--c:var(--wow)} .fr[data-f="sm"]{--c:var(--sm)}
+.fr[data-f="rq"]{--c:var(--rq)} .fr[data-f="sh"]{--c:var(--sh)} .fr[data-f="wow"]{--c:var(--wow)} .fr[data-f="sm"]{--c:var(--sm)} .fr[data-f="bf"]{--c:var(--bf)}
 .fr[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 3px 0 var(--c)}
 
 .filters{background:var(--surface);border:1px solid var(--line);border-radius:12px}
@@ -70,6 +73,7 @@ h1{font-family:"Unbounded","Onest",system-ui,sans-serif;font-weight:700;font-siz
 .fcount{font-size:12px;font-weight:600;background:var(--ink);color:var(--bg);border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}
 .fsum{grid-column:1 / -1;padding:0 10px 12px;margin-top:-4px;min-width:0;font-weight:400;font-size:13px;line-height:1.35;color:var(--ink-2);white-space:normal;overflow-wrap:anywhere}
 .fsum:empty{display:none}
+.filters .franchises{border-top:1px solid var(--line);padding:12px 14px}
 .chev{grid-column:4;font-size:12px;color:var(--ink-3);transition:transform .2s;padding:12px 0}
 .fbar.open .chev{transform:rotate(180deg)}
 .controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;border-top:1px solid var(--line);padding:12px 14px}
@@ -90,7 +94,10 @@ input[type="checkbox"]{accent-color:var(--focus);width:16px;height:16px}
 .cal-btn .car{font-size:10px;opacity:.7}
 .cal-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:280px;max-width:calc(100vw - 32px);background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,16,40,.18);padding:12px;display:grid;gap:8px}
 .cal-head{display:grid;gap:1px;font-weight:600}
-.cal-head small{font-weight:400;color:var(--ink-3);font-size:12px}
+.cal-head small{font-weight:400;color:var(--ink-3);font-size:12px;text-align:center}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cal-arrow{appearance:none;font:inherit;font-size:20px;line-height:1;width:34px;height:30px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;cursor:pointer}
+.cal-arrow:disabled{opacity:.3;cursor:default}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .cal-grid .h{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);text-align:center;padding-bottom:2px}
 .cal-grid .h.we{color:var(--rq)}
@@ -133,7 +140,7 @@ td.date{white-space:nowrap;font-variant-numeric:tabular-nums;width:1%}
 .tm{display:block;color:var(--ink-2);font-size:13px}
 tr.repeat .d, tr.repeat .wd{visibility:hidden}
 .fb{display:inline-block;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap;color:var(--c);background:var(--cs)}
-.fb.rq{--c:var(--rq);--cs:var(--rq-soft)} .fb.sh{--c:var(--sh);--cs:var(--sh-soft)} .fb.wow{--c:var(--wow);--cs:var(--wow-soft)} .fb.sm{--c:var(--sm);--cs:var(--sm-soft)}
+.fb.rq{--c:var(--rq);--cs:var(--rq-soft)} .fb.sh{--c:var(--sh);--cs:var(--sh-soft)} .fb.wow{--c:var(--wow);--cs:var(--wow-soft)} .fb.sm{--c:var(--sm);--cs:var(--sm-soft)} .fb.bf{--c:var(--bf);--cs:var(--bf-soft)}
 td.game .t{font-weight:600}
 td.game .s{color:var(--ink-2);font-size:13.5px}
 .tags{display:inline-flex;gap:4px;margin-left:6px;vertical-align:1px}
@@ -188,7 +195,8 @@ td.venue{white-space:nowrap}
   td.venue::before{content:"";display:inline-block;width:12px;height:13px;margin-right:5px;vertical-align:-1px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center/contain no-repeat}
   tr.dayrow, tbody tr.dayrow{display:block;position:sticky;top:env(safe-area-inset-top, 0px);z-index:2;background:var(--bg);border:0;border-radius:0;padding:10px 2px 4px}
   tr.dayrow td{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:16px}
-  tr.dayrow td span{font-weight:400;font-size:13px;color:var(--ink-3)}
+  tr.dayrow td{gap:10px}
+  tr.dayrow td span{font-weight:400;font-size:13px;color:var(--ink-3);white-space:nowrap;flex:none}
   tr.dayrow td.we{color:var(--rq)}
   tr.dayrow td.today{color:var(--focus)}
   tbody tr.past{opacity:.55}
@@ -202,10 +210,18 @@ td.venue{white-space:nowrap}
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Ижевск · октябрь 2026</div>
+    <div class="eyebrow" id="eyebrow">Ижевск</div>
   </header>
 
+  <div class="filters">
+  <div class="fbar" id="frBar">
+    <button class="ftoggle" id="frToggle" type="button" aria-expanded="true" aria-controls="frBox">Франшизы</button>
+    <button class="reset" id="frReset" type="button" hidden>Сбросить</button>
+    <span class="chev" aria-hidden="true">▼</span>
+    <span class="fsum" id="frSum"></span>
+  </div>
   <div class="franchises" id="frBox"></div>
+  </div>
 
   <div class="filters">
   <div class="fbar" id="fbar">
@@ -221,7 +237,14 @@ td.venue{white-space:nowrap}
       <button class="chip cal-btn" id="calBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="calPop"><span id="calLabel">Все даты</span><span class="car">▼</span></button>
       <button class="chip" id="pastBtn" type="button" aria-pressed="false">Показать прошедшие</button>
       <div class="cal-pop" id="calPop" hidden>
-        <div class="cal-head">Октябрь 2026 <small>число — игр в этот день</small></div>
+        <div class="cal-head">
+          <div class="cal-nav">
+            <button type="button" class="cal-arrow" id="calPrev" aria-label="Предыдущий месяц">‹</button>
+            <span id="calTitle">Октябрь 2026</span>
+            <button type="button" class="cal-arrow" id="calNext" aria-label="Следующий месяц">›</button>
+          </div>
+          <small>число — игр в этот день</small>
+        </div>
         <div class="cal-grid" id="calGrid"></div>
         <div class="cal-foot">
           <button class="reset" id="calClear" type="button">Сбросить</button>
@@ -272,7 +295,8 @@ const FR = {
   rq:  {name:"Ре-квиз-ит",  sub:"Четверги, Мята Lounge"},
   sh:  {name:"Шейкер квиз", sub:"Почти каждый день, 8 площадок"},
   wow: {name:"ВАУ квиз",    sub:""},
-  sm:  {name:"Смузи",       sub:""}
+  sm:  {name:"Смузи",       sub:""},
+  bf:  {name:"Брейнфест",   sub:""}
 };
 const TYPES = {
   gen: {name:"Общая",          c:"--t-gen"},
@@ -285,154 +309,210 @@ const TYPES = {
 const WD = ["вс","пн","вт","ср","чт","пт","сб"];
 const WD_FULL = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
 
-// [день, время, франшиза, название, уточнение, площадка, тип]
+// [дата, время, франшиза, название, уточнение, площадка, тип]
 const RAW = [
  // Ре-квиз-ит
- [1,"19:30","rq","Школьный квиз","","Мята Lounge","them"],
- [8,"19:30","rq","Классика","","Мята Lounge","gen"],
- [15,"19:30","rq","Очень лёгкие мультики","","Мята Lounge","kino"],
- [22,"19:30","rq","Телешоу","","Мята Lounge","kino"],
- [29,"19:30","rq","Хэллоуин","","Мята Lounge","them"],
+ ["2026-10-01","19:30","rq","Школьный квиз","","Мята Lounge","them"],
+ ["2026-10-08","19:30","rq","Классика","","Мята Lounge","gen"],
+ ["2026-10-15","19:30","rq","Очень лёгкие мультики","","Мята Lounge","kino"],
+ ["2026-10-22","19:30","rq","Телешоу","","Мята Lounge","kino"],
+ ["2026-10-29","19:30","rq","Хэллоуин","","Мята Lounge","them"],
  // Шейкер квиз
- [1,"19:30","sh","#ОбоВсём","Суперлайт. 100 вопросов","Терминал F","gen"],
- [2,"19:00","sh","Музыкальное лото","Русское. Лайт","Терминал F","mus"],
- [3,"16:00","sh","Назад в 00-е","","Мята Lounge","nost"],
- [4,"16:00","sh","#ОбоВсём","Твоя игра","Паб «Пинта»","gen"],
- [4,"19:00","sh","#ОбоВсём и Музыка","Суперлайт. 100 вопросов","Паб «Пинта»","gen"],
- [5,"19:30","sh","#ОбоВсём","8 в 1. Лайт","Паб «Пинта»","gen"],
- [6,"19:30","sh","#ОбоВсём","","Мята Lounge","gen"],
- [7,"19:30","sh","Назад в СССР и 90-е","","Мята Lounge","nost"],
- [8,"19:30","sh","Угадай мелодию","Танцевальный. Лайт","Терминал F","mus"],
- [8,"19:30","sh","#ОбоВсём","","НиСплетни","gen"],
- [9,"19:00","sh","Кино","","Терминал F","kino"],
- [9,"19:00","sh","Битва городов: Ижевск vs Чайковский","","Теремок","spec"],
- [10,"16:00","sh","Гарри Поттер","Лайт. Фильмы и книги","Мята Lounge","kino"],
- [11,"16:00","sh","Аниме","Угадайка. 100 вопросов","Мята Lounge","kino"],
- [11,"19:00","sh","Музыка","150 хитов","Мята Lounge","mus"],
- [12,"19:30","sh","#ОбоВсём","Лото","Паб «Пинта»","gen"],
- [13,"19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
- [14,"19:30","sh","18+","","Harat's Pub","them"],
- [14,"19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
- [15,"19:30","sh","История","","Бар читателей","them"],
- [15,"19:30","sh","Музыка","Рок","НиСплетни","mus"],
- [16,"19:00","sh","Кино и музыка","Лайт. 100 вопросов","Терминал F","kino"],
- [17,"16:00","sh","Чисто попеть","","Мята Lounge","mus"],
- [18,"16:00","sh","Чемпионат мира по Шейкер квиз 2026","#ОбоВсём","Мята Lounge","gen"],
- [18,"19:00","sh","Музыкальный марафон","","Мята Lounge","mus"],
- [19,"19:30","sh","#ОбоВсём","Суперлайт. 100 вопросов","Паб «Пинта»","gen"],
- [20,"19:30","sh","#ОбоВсём","","Мята Lounge","gen"],
- [21,"19:30","sh","География и путешествия","","Мята Lounge","them"],
- [22,"19:00","sh","Видеоигры","Угадайка. 100 вопросов","НиСплетни","them"],
- [22,"19:30","sh","Телеквиз","Лайт","Терминал F","kino"],
- [23,"19:00","sh","Гастроквиз","","Терминал F","them"],
- [23,"19:00","sh","Чисто попеть","00-е","Теремок","mus"],
- [24,"16:00","sh","Караоке-квиз","Русские хиты","Мята Lounge","mus"],
- [25,"16:00","sh","Советские фильмы и музыка","","Мята Lounge","nost"],
- [25,"19:00","sh","Угадай мелодию","Музыка 90-х и 00-х. Лайт","Мята Lounge","mus"],
- [26,"19:30","sh","#ОбоВсём","Командное звено","Паб «Пинта»","gen"],
- [27,"19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
- [28,"19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
- [29,"19:30","sh","Чисто попеть","00-е и 10-е. Русское","Бар читателей","mus"],
- [30,"19:00","sh","Кино, мультфильмы, сериалы","Телеквиз. Лайт","Терминал F","kino"],
- [31,"17:00","sh","Хэллоуин","","Мята Lounge","them"],
+ ["2026-10-01","19:30","sh","#ОбоВсём","Суперлайт. 100 вопросов","Терминал F","gen"],
+ ["2026-10-02","19:00","sh","Музыкальное лото","Русское. Лайт","Терминал F","mus"],
+ ["2026-10-03","16:00","sh","Назад в 00-е","","Мята Lounge","nost"],
+ ["2026-10-04","16:00","sh","#ОбоВсём","Твоя игра","Паб «Пинта»","gen"],
+ ["2026-10-04","19:00","sh","#ОбоВсём и Музыка","Суперлайт. 100 вопросов","Паб «Пинта»","gen"],
+ ["2026-10-05","19:30","sh","#ОбоВсём","8 в 1. Лайт","Паб «Пинта»","gen"],
+ ["2026-10-06","19:30","sh","#ОбоВсём","","Мята Lounge","gen"],
+ ["2026-10-07","19:30","sh","Назад в СССР и 90-е","","Мята Lounge","nost"],
+ ["2026-10-08","19:30","sh","Угадай мелодию","Танцевальный. Лайт","Терминал F","mus"],
+ ["2026-10-08","19:30","sh","#ОбоВсём","","НиСплетни","gen"],
+ ["2026-10-09","19:00","sh","Кино","","Терминал F","kino"],
+ ["2026-10-09","19:00","sh","Битва городов: Ижевск vs Чайковский","","Теремок","spec"],
+ ["2026-10-10","16:00","sh","Гарри Поттер","Лайт. Фильмы и книги","Мята Lounge","kino"],
+ ["2026-10-11","16:00","sh","Аниме","Угадайка. 100 вопросов","Мята Lounge","kino"],
+ ["2026-10-11","19:00","sh","Музыка","150 хитов","Мята Lounge","mus"],
+ ["2026-10-12","19:30","sh","#ОбоВсём","Лото","Паб «Пинта»","gen"],
+ ["2026-10-13","19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
+ ["2026-10-14","19:30","sh","18+","","Harat's Pub","them"],
+ ["2026-10-14","19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
+ ["2026-10-15","19:30","sh","История","","Бар читателей","them"],
+ ["2026-10-15","19:30","sh","Музыка","Рок","НиСплетни","mus"],
+ ["2026-10-16","19:00","sh","Кино и музыка","Лайт. 100 вопросов","Терминал F","kino"],
+ ["2026-10-17","16:00","sh","Чисто попеть","","Мята Lounge","mus"],
+ ["2026-10-18","16:00","sh","Чемпионат мира по Шейкер квиз 2026","#ОбоВсём","Мята Lounge","gen"],
+ ["2026-10-18","19:00","sh","Музыкальный марафон","","Мята Lounge","mus"],
+ ["2026-10-19","19:30","sh","#ОбоВсём","Суперлайт. 100 вопросов","Паб «Пинта»","gen"],
+ ["2026-10-20","19:30","sh","#ОбоВсём","","Мята Lounge","gen"],
+ ["2026-10-21","19:30","sh","География и путешествия","","Мята Lounge","them"],
+ ["2026-10-22","19:00","sh","Видеоигры","Угадайка. 100 вопросов","НиСплетни","them"],
+ ["2026-10-22","19:30","sh","Телеквиз","Лайт","Терминал F","kino"],
+ ["2026-10-23","19:00","sh","Гастроквиз","","Терминал F","them"],
+ ["2026-10-23","19:00","sh","Чисто попеть","00-е","Теремок","mus"],
+ ["2026-10-24","16:00","sh","Караоке-квиз","Русские хиты","Мята Lounge","mus"],
+ ["2026-10-25","16:00","sh","Советские фильмы и музыка","","Мята Lounge","nost"],
+ ["2026-10-25","19:00","sh","Угадай мелодию","Музыка 90-х и 00-х. Лайт","Мята Lounge","mus"],
+ ["2026-10-26","19:30","sh","#ОбоВсём","Командное звено","Паб «Пинта»","gen"],
+ ["2026-10-27","19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
+ ["2026-10-28","19:30","sh","#ОбоВсём","Лайт","Мята Lounge","gen"],
+ ["2026-10-29","19:30","sh","Чисто попеть","00-е и 10-е. Русское","Бар читателей","mus"],
+ ["2026-10-30","19:00","sh","Кино, мультфильмы, сериалы","Телеквиз. Лайт","Терминал F","kino"],
+ ["2026-10-31","17:00","sh","Хэллоуин","","Мята Lounge","them"],
  // ВАУ квиз
- [1,"19:30","wow","Обо всём","Проще некуда","Паб «Пинта»","gen"],
- [2,"19:00","wow","Угадай мелодию","Хиты 90-х и 00-х. Микс","НиСплетни","mus"],
- [3,"16:00","wow","Угадай мелодию","ВАУ караоке. Русское","Harat's Pub","mus"],
- [4,"18:00","wow","Угадай мелодию","120 русских суперхитов","Юпитер 5","mus"],
- [5,"19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
- [6,"19:30","wow","Назад в детство","СССР, 90-е и 00-е","Юпитер 5","nost"],
- [7,"19:30","wow","Кино, музыка, сериалы","100 вопросов","Юпитер 5","kino"],
- [8,"19:30","wow","Обо всём","Просто и логично","Паб «Пинта»","gen"],
- [9,"19:00","wow","Угадай мелодию","100 хитов. Микс","НиСплетни","mus"],
- [10,"16:00","wow","Угадай мелодию","Хиты русского рока","Harat's Pub","mus"],
- [11,"15:30","wow","Обо всём","Семейный","Паб «Пинта»","gen"],
- [11,"19:00","wow","Угадай мелодию","100 русских хитов 90-х и 00-х","Паб «Пинта»","mus"],
- [12,"19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
- [13,"19:30","wow","Человек-паук","Проще некуда","Юпитер 5","kino"],
- [13,"19:30","wow","Литература","Угадайка","Имени Койкого","them"],
- [14,"19:30","wow","Кино, музыка, мультфильмы, сериалы","Проще некуда","Юпитер 5","kino"],
- [15,"19:30","wow","Обо всём","Проще некуда","Юпитер 5","gen"],
- [16,"19:00","wow","Угадай мелодию","Проще некуда. Микс","НиСплетни","mus"],
- [17,"16:00","wow","Угадай мелодию","160 русских хитов","Harat's Pub","mus"],
- [18,"18:00","wow","ВАУ! На все сто","","Юпитер 5","gen"],
- [19,"19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
- [20,"19:30","wow","Кино и музыка СССР","Угадайка","Юпитер 5","nost"],
- [20,"19:30","wow","Детективные сериалы","Проще некуда","Имени Койкого","kino"],
- [21,"19:30","wow","Вокруг света","Угадайка","Юпитер 5","them"],
- [22,"19:30","wow","ВАУ Детектив 7","","Юпитер 5","spec"],
- [23,"19:00","wow","Угадай мелодию","ВАУ караоке. Русское","Манго Бум","mus"],
- [24,"16:00","wow","Угадай мелодию","100 хитов. Микс","Harat's Pub","mus"],
- [25,"18:00","wow","Обо всём","Семейный","Юпитер 5","gen"],
- [26,"19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
- [27,"19:30","wow","Мемы","Проще некуда","Юпитер 5","them"],
- [27,"19:30","wow","Русская музыка 90-х и 00-х","","Имени Койкого","mus"],
- [28,"19:30","wow","Кино, музыка, сериалы","100 вопросов","Юпитер 5","kino"],
- [29,"19:30","wow","Обо всём","Проще некуда","Юпитер 5","gen"],
- [30,"19:00","wow","Угадай мелодию","Суперлёгкая. Русские хиты","Манго Бум","mus"],
- [31,"16:00","wow","Угадай мелодию","Шабаш хитов. Микс","НиСплетни","mus"],
+ ["2026-10-01","19:30","wow","Обо всём","Проще некуда","Паб «Пинта»","gen"],
+ ["2026-10-02","19:00","wow","Угадай мелодию","Хиты 90-х и 00-х. Микс","НиСплетни","mus"],
+ ["2026-10-03","16:00","wow","Угадай мелодию","ВАУ караоке. Русское","Harat's Pub","mus"],
+ ["2026-10-04","18:00","wow","Угадай мелодию","120 русских суперхитов","Юпитер 5","mus"],
+ ["2026-10-05","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-10-06","19:30","wow","Назад в детство","СССР, 90-е и 00-е","Юпитер 5","nost"],
+ ["2026-10-07","19:30","wow","Кино, музыка, сериалы","100 вопросов","Юпитер 5","kino"],
+ ["2026-10-08","19:30","wow","Обо всём","Просто и логично","Паб «Пинта»","gen"],
+ ["2026-10-09","19:00","wow","Угадай мелодию","100 хитов. Микс","НиСплетни","mus"],
+ ["2026-10-10","16:00","wow","Угадай мелодию","Хиты русского рока","Harat's Pub","mus"],
+ ["2026-10-11","15:30","wow","Обо всём","Семейный","Паб «Пинта»","gen"],
+ ["2026-10-11","19:00","wow","Угадай мелодию","100 русских хитов 90-х и 00-х","Паб «Пинта»","mus"],
+ ["2026-10-12","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-10-13","19:30","wow","Человек-паук","Проще некуда","Юпитер 5","kino"],
+ ["2026-10-13","19:30","wow","Литература","Угадайка","Имени Койкого","them"],
+ ["2026-10-14","19:30","wow","Кино, музыка, мультфильмы, сериалы","Проще некуда","Юпитер 5","kino"],
+ ["2026-10-15","19:30","wow","Обо всём","Проще некуда","Юпитер 5","gen"],
+ ["2026-10-16","19:00","wow","Угадай мелодию","Проще некуда. Микс","НиСплетни","mus"],
+ ["2026-10-17","16:00","wow","Угадай мелодию","160 русских хитов","Harat's Pub","mus"],
+ ["2026-10-18","18:00","wow","ВАУ! На все сто","","Юпитер 5","gen"],
+ ["2026-10-19","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-10-20","19:30","wow","Кино и музыка СССР","Угадайка","Юпитер 5","nost"],
+ ["2026-10-20","19:30","wow","Детективные сериалы","Проще некуда","Имени Койкого","kino"],
+ ["2026-10-21","19:30","wow","Вокруг света","Угадайка","Юпитер 5","them"],
+ ["2026-10-22","19:30","wow","ВАУ Детектив 7","","Юпитер 5","spec"],
+ ["2026-10-23","19:00","wow","Угадай мелодию","ВАУ караоке. Русское","Манго Бум","mus"],
+ ["2026-10-24","16:00","wow","Угадай мелодию","100 хитов. Микс","Harat's Pub","mus"],
+ ["2026-10-25","18:00","wow","Обо всём","Семейный","Юпитер 5","gen"],
+ ["2026-10-26","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-10-27","19:30","wow","Мемы","Проще некуда","Юпитер 5","them"],
+ ["2026-10-27","19:30","wow","Русская музыка 90-х и 00-х","","Имени Койкого","mus"],
+ ["2026-10-28","19:30","wow","Кино, музыка, сериалы","100 вопросов","Юпитер 5","kino"],
+ ["2026-10-29","19:30","wow","Обо всём","Проще некуда","Юпитер 5","gen"],
+ ["2026-10-30","19:00","wow","Угадай мелодию","Суперлёгкая. Русские хиты","Манго Бум","mus"],
+ ["2026-10-31","16:00","wow","Угадай мелодию","Шабаш хитов. Микс","НиСплетни","mus"],
  // Смузи
- [1,"19:30","sm","Угадай видеоигру","Лайт","Свобода Бар","them"],
- [1,"19:30","sm","Угадай мелодию","Русские хиты 2000-х и 2010-х","Имени Койкого","mus"],
- [2,"19:00","sm","Угадай мелодию","155 русских хитов","Гастропарк «МЫ»","mus"],
- [3,"16:00","sm","Гарри Поттер и Принц-полукровка","","Свобода Бар","kino"],
- [3,"19:00","sm","Угадай мелодию","Русские хиты 90-х и 2000-х","Свобода Бар","mus"],
- [4,"13:00","sm","Советские мультфильмы","","Свобода Бар","nost"],
- [4,"16:00","sm","Топовые фильмы","","Свобода Бар","kino"],
- [4,"19:00","sm","Сериал F.R.I.E.N.D.S","","Свобода Бар","kino"],
- [8,"19:30","sm","Музыка и кино СССР","","Свобода Бар","nost"],
- [8,"19:30","sm","Танцуем и поём","Русские хиты 2000-х и 2010-х. Музыкальный чемпионат","Имени Койкого","mus"],
- [9,"19:00","sm","Караоке-квиз","Только припевы","Гастропарк «МЫ»","mus"],
- [10,"16:00","sm","Обо всём","Лайт","Свобода Бар","gen"],
- [10,"19:00","sm","Угадай мелодию","Русские хиты 2016–2026","Свобода Бар","mus"],
- [11,"13:00","sm","Сваты","","Свобода Бар","kino"],
- [11,"16:00","sm","Литература","Лайт","Свобода Бар","them"],
- [11,"19:00","sm","Медиа-микс","Музыка, кино, мультфильмы, сериалы","Свобода Бар","kino"],
- [13,"19:30","sm","Музыкальное лото","Музыкальный чемпионат","Свобода Бар","mus"],
- [14,"19:30","sm","Караоке-квиз","Русский рэп и хип-хоп. 18+","Свобода Бар","mus"],
- [15,"19:30","sm","Атака титанов","","Свобода Бар","kino"],
- [16,"19:00","sm","Танцуем и поём","Русские хиты 2010–2026","Гастропарк «МЫ»","mus"],
- [17,"16:00","sm","Обо всём в картинках","","Свобода Бар","gen"],
- [17,"19:00","sm","Музыкальный марафон","Лайт. 155 русских хитов за 2 часа","Свобода Бар","mus"],
- [18,"13:00","sm","Властелин колец и Хоббит","Фильмы","Свобода Бар","kino"],
- [18,"16:00","sm","Мультфильмы","","Свобода Бар","kino"],
- [18,"19:00","sm","Угадай мелодию","Русские хиты 2010-х","Свобода Бар","mus"],
- [20,"19:30","sm","Угадай мелодию","Крафт. Музыкальный чемпионат","Свобода Бар","mus"],
- [21,"19:30","sm","Сумерки. Сага","Сумерки. Чемпионат","Свобода Бар","kino"],
- [22,"19:30","sm","Футбол","Угадайка. Лайт","Свобода Бар","them"],
- [22,"19:30","sm","Музыкальный микс","Русские хиты 90-х и 2000-х","Имени Койкого","mus"],
- [23,"19:00","sm","Караоке-квиз","Только хиты","Гастропарк «МЫ»","mus"],
- [24,"16:00","sm","Обо всём","","Свобода Бар","gen"],
- [24,"19:00","sm","Угадай мелодию","155 хитов","Свобода Бар","mus"],
- [25,"13:00","sm","Караоке-квиз","Современное 2016–2026","Свобода Бар","mus"],
- [25,"16:00","sm","Музыкальный микс","Русские хиты 2000-х и 2010-х","Свобода Бар","mus"],
- [25,"19:00","sm","Русский рок","Только музыка","Свобода Бар","mus"],
- [27,"19:30","sm","Служебный роман","","Свобода Бар","kino"],
- [28,"19:30","sm","Угадай мелодию","Русская музыка 2000-х и 2010-х. Музыкальный чемпионат","Свобода Бар","mus"],
- [29,"19:30","sm","Сверхъестественное","","Свобода Бар","kino"],
- [29,"19:30","sm","Угадай мелодию","Русские хиты. Супер-лайт","Имени Койкого","mus"],
- [30,"19:00","sm","Угадай мелодию","Только русские хиты","Гастропарк «МЫ»","mus"],
- [31,"16:00","sm","Хэллоуин в Хогвартсе","","Свобода Бар","kino"],
- [31,"19:00","sm","Музыкальный шабаш","","Свобода Бар","mus"]
+ ["2026-10-01","19:30","sm","Угадай видеоигру","Лайт","Свобода Бар","them"],
+ ["2026-10-01","19:30","sm","Угадай мелодию","Русские хиты 2000-х и 2010-х","Имени Койкого","mus"],
+ ["2026-10-02","19:00","sm","Угадай мелодию","155 русских хитов","Гастропарк «МЫ»","mus"],
+ ["2026-10-03","16:00","sm","Гарри Поттер и Принц-полукровка","","Свобода Бар","kino"],
+ ["2026-10-03","19:00","sm","Угадай мелодию","Русские хиты 90-х и 2000-х","Свобода Бар","mus"],
+ ["2026-10-04","13:00","sm","Советские мультфильмы","","Свобода Бар","nost"],
+ ["2026-10-04","16:00","sm","Топовые фильмы","","Свобода Бар","kino"],
+ ["2026-10-04","19:00","sm","Сериал F.R.I.E.N.D.S","","Свобода Бар","kino"],
+ ["2026-10-08","19:30","sm","Музыка и кино СССР","","Свобода Бар","nost"],
+ ["2026-10-08","19:30","sm","Танцуем и поём","Русские хиты 2000-х и 2010-х. Музыкальный чемпионат","Имени Койкого","mus"],
+ ["2026-10-09","19:00","sm","Караоке-квиз","Только припевы","Гастропарк «МЫ»","mus"],
+ ["2026-10-10","16:00","sm","Обо всём","Лайт","Свобода Бар","gen"],
+ ["2026-10-10","19:00","sm","Угадай мелодию","Русские хиты 2016–2026","Свобода Бар","mus"],
+ ["2026-10-11","13:00","sm","Сваты","","Свобода Бар","kino"],
+ ["2026-10-11","16:00","sm","Литература","Лайт","Свобода Бар","them"],
+ ["2026-10-11","19:00","sm","Медиа-микс","Музыка, кино, мультфильмы, сериалы","Свобода Бар","kino"],
+ ["2026-10-13","19:30","sm","Музыкальное лото","Музыкальный чемпионат","Свобода Бар","mus"],
+ ["2026-10-14","19:30","sm","Караоке-квиз","Русский рэп и хип-хоп. 18+","Свобода Бар","mus"],
+ ["2026-10-15","19:30","sm","Атака титанов","","Свобода Бар","kino"],
+ ["2026-10-16","19:00","sm","Танцуем и поём","Русские хиты 2010–2026","Гастропарк «МЫ»","mus"],
+ ["2026-10-17","16:00","sm","Обо всём в картинках","","Свобода Бар","gen"],
+ ["2026-10-17","19:00","sm","Музыкальный марафон","Лайт. 155 русских хитов за 2 часа","Свобода Бар","mus"],
+ ["2026-10-18","13:00","sm","Властелин колец и Хоббит","Фильмы","Свобода Бар","kino"],
+ ["2026-10-18","16:00","sm","Мультфильмы","","Свобода Бар","kino"],
+ ["2026-10-18","19:00","sm","Угадай мелодию","Русские хиты 2010-х","Свобода Бар","mus"],
+ ["2026-10-20","19:30","sm","Угадай мелодию","Крафт. Музыкальный чемпионат","Свобода Бар","mus"],
+ ["2026-10-21","19:30","sm","Сумерки. Сага","Сумерки. Чемпионат","Свобода Бар","kino"],
+ ["2026-10-22","19:30","sm","Футбол","Угадайка. Лайт","Свобода Бар","them"],
+ ["2026-10-22","19:30","sm","Музыкальный микс","Русские хиты 90-х и 2000-х","Имени Койкого","mus"],
+ ["2026-10-23","19:00","sm","Караоке-квиз","Только хиты","Гастропарк «МЫ»","mus"],
+ ["2026-10-24","16:00","sm","Обо всём","","Свобода Бар","gen"],
+ ["2026-10-24","19:00","sm","Угадай мелодию","155 хитов","Свобода Бар","mus"],
+ ["2026-10-25","13:00","sm","Караоке-квиз","Современное 2016–2026","Свобода Бар","mus"],
+ ["2026-10-25","16:00","sm","Музыкальный микс","Русские хиты 2000-х и 2010-х","Свобода Бар","mus"],
+ ["2026-10-25","19:00","sm","Русский рок","Только музыка","Свобода Бар","mus"],
+ ["2026-10-27","19:30","sm","Служебный роман","","Свобода Бар","kino"],
+ ["2026-10-28","19:30","sm","Угадай мелодию","Русская музыка 2000-х и 2010-х. Музыкальный чемпионат","Свобода Бар","mus"],
+ ["2026-10-29","19:30","sm","Сверхъестественное","","Свобода Бар","kino"],
+ ["2026-10-29","19:30","sm","Угадай мелодию","Русские хиты. Супер-лайт","Имени Койкого","mus"],
+ ["2026-10-30","19:00","sm","Угадай мелодию","Только русские хиты","Гастропарк «МЫ»","mus"],
+ ["2026-10-31","16:00","sm","Хэллоуин в Хогвартсе","","Свобода Бар","kino"],
+ ["2026-10-31","19:00","sm","Музыкальный шабаш","","Свобода Бар","mus"],
+ // ВАУ квиз — ноябрь
+ ["2026-11-01","18:00","wow","Угадай мелодию","100 русских суперхитов","Юпитер 5","mus"],
+ ["2026-11-02","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-11-03","19:00","wow","Назад в СССР","Проще некуда","Юпитер 5","nost"],
+ ["2026-11-04","15:30","wow","Кино, мультфильмы, сериалы","","Паб «Пинта»","kino"],
+ ["2026-11-04","19:00","wow","Угадай мелодию","Русские хиты. Чёрный ящик","Паб «Пинта»","mus"],
+ ["2026-11-05","19:30","wow","Обо всём","Просто и логично","Паб «Пинта»","gen"],
+ ["2026-11-06","19:00","wow","Угадай мелодию","ВАУ караоке. Русское","НиСплетни","mus"],
+ ["2026-11-07","16:00","wow","Угадай мелодию","Русские хиты 90-х","Harat's Pub","mus"],
+ ["2026-11-08","18:00","wow","Угадай мелодию","100 хитов. Микс","Юпитер 5","mus"],
+ ["2026-11-09","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-11-10","19:30","wow","Кино и музыка СССР","","Юпитер 5","nost"],
+ ["2026-11-11","19:30","wow","Угадай кино","100 вопросов. Проще некуда","Юпитер 5","kino"],
+ ["2026-11-12","19:30","wow","Угадай футбол","","Имени Койкого","them"],
+ ["2026-11-13","19:00","wow","Угадай мелодию","100 русских хитов. Проще некуда","Манго Бум","mus"],
+ ["2026-11-14","16:00","wow","Угадай мелодию","100 хитов. Микс","Harat's Pub","mus"],
+ ["2026-11-15","18:00","wow","Угадай мелодию","100 русских хитов 90-х и 00-х","Юпитер 5","mus"],
+ ["2026-11-16","19:30","wow","Обо всём","100 вопросов","Юпитер 5","gen"],
+ ["2026-11-17","19:30","wow","Советские комедии","","Юпитер 5","nost"],
+ ["2026-11-18","19:30","wow","Кино, музыка, сериалы","100 вопросов","Юпитер 5","kino"],
+ ["2026-11-19","19:30","wow","Обо всём","Проще некуда","Юпитер 5","gen"],
+ ["2026-11-19","19:30","wow","Сумерки","Угадайка. Только фильмы","Имени Койкого","kino"],
+ ["2026-11-20","19:00","wow","Угадай мелодию","Проще некуда. Микс","НиСплетни","mus"],
+ ["2026-11-21","16:00","wow","Угадай мелодию","Азарт. Русское","Harat's Pub","mus"],
+ ["2026-11-22","15:30","wow","Обо всём","Семейный","Паб «Пинта»","gen"],
+ ["2026-11-22","19:00","wow","Угадай мелодию","100 русских современных хитов","Паб «Пинта»","mus"],
+ ["2026-11-23","19:30","wow","ВАУ! На все сто","","Юпитер 5","gen"],
+ ["2026-11-24","19:30","wow","Чёрный квиз","Проще некуда","Юпитер 5","them"],
+ ["2026-11-24","19:30","wow","Русская музыка 00-х","","Имени Койкого","mus"],
+ ["2026-11-25","19:30","wow","Кино, музыка, мультфильмы, сериалы","Русское. Проще некуда","Юпитер 5","kino"],
+ ["2026-11-26","19:30","wow","ВАУ Детектив","","Юпитер 5","spec"],
+ ["2026-11-27","19:00","wow","Угадай мелодию","ВАУ караоке. Русское","Манго Бум","mus"],
+ ["2026-11-28","16:00","wow","Музыкальное ВАУлото","Микс","Harat's Pub","mus"],
+ ["2026-11-29","18:00","wow","Угадай мелодию","Русские хиты. Суперлёгкая","Манго Бум","mus"],
+ ["2026-11-30","19:30","wow","Обо всём","Лига городов. Финал","Юпитер 5","gen"],
+ // Брейнфест
+ ["2026-10-21","19:30","bf","Классика","Брейнфест #356","Паб «Пинта»","gen"],
+ ["2026-10-28","19:30","bf","Калейдоскоп","Брейнфест #357","Паб «Пинта»","gen"],
+ ["2026-11-11","19:30","bf","Кино-книжный","Брейнфест #358","Паб «Пинта»","kino"],
+ ["2026-11-18","19:30","bf","Классика","Брейнфест #359","Паб «Пинта»","gen"],
+ ["2026-11-25","19:30","bf","XX–XXI века","Брейнфест #360","Паб «Пинта»","them"]
 ];
 
 const EASY_RE = /лайт|проще некуда|суперл[её]гк|очень л[её]гк/i;
-const FR_ORDER = {rq:0, sh:1, wow:2, sm:3};
+const FR_ORDER = {rq:0, sh:1, wow:2, sm:3, bf:4};
 const ALL_FR = () => new Set(Object.keys(FR));
 const GAME_MS = 150*60*1000; // игра идёт около 2,5 часов
 const isPast = x => x.end < Date.now();
-const DATA = RAW.map(([d,t,fr,game,sub,venue,type],i)=>{
-  const wd = new Date(2026,9,d).getDay();
+const MON_NOM = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+const MON_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const MON_SHORT = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+const DATA = RAW.map(([ds,t,fr,game,sub,venue,type],i)=>{
+  const [y,mo,d] = ds.split("-").map(Number), m = mo-1;
+  const date = new Date(y,m,d);
+  const wd = date.getDay();
+  const ymd = y*10000 + mo*100 + d;
   const full = game + " " + sub;
-  return {i,d,t,fr,game,sub,venue,type,wd,
+  return {i,y,m,d,ymd,date,t,fr,game,sub,venue,type,wd,
     easy: EASY_RE.test(full),
     family: /семейн/i.test(full),
-    champ: /чемпионат/i.test(full),
+    champ: /чемпионат|лига городов/i.test(full),
     adult: /18\+/.test(full),
-    key: d*10000 + parseInt(t)*100 + parseInt(t.slice(3)),
-    end: new Date(2026,9,d,parseInt(t),parseInt(t.slice(3))).getTime() + GAME_MS};
+    key: ymd*10000 + parseInt(t)*100 + parseInt(t.slice(3)),
+    end: new Date(y,m,d,parseInt(t),parseInt(t.slice(3))).getTime() + GAME_MS};
 });
 
+// месяцы, за которые есть расписание
+const MONTHS = [...new Set(DATA.map(x=>x.y*100+x.m))].sort((a,b)=>a-b).map(v=>({y:Math.floor(v/100), m:v%100}));
+const daysIn = (y,m) => new Date(y,m+1,0).getDate();
+const fmtShort = x => `${x.d} ${MON_SHORT[x.m]}`;
+(function eyebrow(){
+  const f = MONTHS[0], l = MONTHS[MONTHS.length-1];
+  const txt = MONTHS.length===1 ? `${MON_NOM[f.m]} ${f.y}` : f.y===l.y ? `${MON_NOM[f.m]} — ${MON_NOM[l.m]} ${l.y}` : `${MON_NOM[f.m]} ${f.y} — ${MON_NOM[l.m]} ${l.y}`;
+  document.getElementById("eyebrow").textContent = "Ижевск · " + txt;
+})();
 const state = {fr:ALL_FR(), type:new Set(), wd:new Set(), dates:new Set(), venue:"", q:"", showPast:false};
 
 // Франшизы
@@ -442,8 +522,11 @@ for (const k of Object.keys(FR)){
   const b = document.createElement("button");
   b.className="fr"; b.type="button"; b.dataset.f=k; b.setAttribute("aria-pressed","true");
   const rows = DATA.filter(x=>x.fr===k);
-  const nd = new Set(rows.map(x=>x.d)).size, nv = new Set(rows.map(x=>x.venue)).size;
-  const sub = (nd===31 ? "Каждый день" : `${nd} ${plural(nd,"день","дня","дней")}`) + `, ${nv} ${plural(nv,"площадка","площадки","площадок")}`;
+  const nd = new Set(rows.map(x=>x.ymd)).size, nv = new Set(rows.map(x=>x.venue)).size;
+  const months = [...new Set(rows.map(x=>x.y*100+x.m))];
+  const full = months.reduce((a,v)=>a+daysIn(Math.floor(v/100), v%100), 0);
+  const last = rows.reduce((a,x)=>x.ymd>a.ymd?x:a, rows[0]);
+  const sub = (nd===full ? "Каждый день" : `${nd} ${plural(nd,"день","дня","дней")}`) + `, ${nv} ${plural(nv,"площадка","площадки","площадок")} · до ${fmtShort(last)}`;
   b.innerHTML = `<span class="n">${n}</span><span class="nm">${FR[k].name}</span><span class="sub">${sub}</span>`;
   b.onclick = ()=>{
     if (state.fr.has(k) && state.fr.size===Object.keys(FR).length){ state.fr = new Set([k]); }
@@ -494,38 +577,35 @@ Object.keys(venues).sort((a,b)=>venues[b]-venues[a]).forEach(v=>{
 venueSel.onchange = ()=>{state.venue=venueSel.value; render();};
 document.getElementById("q").oninput = e=>{state.q=e.target.value.trim().toLowerCase(); render();};
 function resetAll(){
-  Object.assign(state,{fr:ALL_FR(),type:new Set(),wd:new Set(),dates:new Set(),venue:"",q:"",showPast:false});
+  Object.assign(state,{type:new Set(),wd:new Set(),dates:new Set(),venue:"",q:"",showPast:false});
   venueSel.value=""; document.getElementById("q").value="";
   render();
 }
+document.getElementById("frReset").onclick = ()=>{ state.fr = ALL_FR(); render(); };
 document.getElementById("reset").onclick = resetAll;
 document.getElementById("reset2").onclick = resetAll;
 const pastBtn = document.getElementById("pastBtn");
 function togglePast(){ state.showPast = !state.showPast; render(); }
 pastBtn.onclick = togglePast;
 
-// Сворачивание фильтров
-const fToggle = document.getElementById("fToggle"), controls = document.getElementById("controls");
-function setFilters(open, save){
-  controls.hidden = !open; fToggle.setAttribute("aria-expanded", open);
-  document.getElementById("fbar").classList.toggle("open", open);
-  if (save) { try { localStorage.setItem("filtersOpen", open ? "1" : "0"); } catch(e){} }
-}
-(function initFilters(){
+// Сворачиваемые блоки «Франшизы» и «Фильтры»: вся полоса нажимается, кроме кнопки «Сбросить»
+function collapsible(barId, toggleId, bodyId, storeKey){
+  const bar = document.getElementById(barId), btn = document.getElementById(toggleId), body = document.getElementById(bodyId);
+  function set(open, save){
+    body.hidden = !open; btn.setAttribute("aria-expanded", open); bar.classList.toggle("open", open);
+    if (save) { try { localStorage.setItem(storeKey, open ? "1" : "0"); } catch(e){} }
+  }
   let saved = null;
-  try { saved = localStorage.getItem("filtersOpen"); } catch(e){}
+  try { saved = localStorage.getItem(storeKey); } catch(e){}
   const isPhone = window.matchMedia("(max-width:640px)").matches;
-  setFilters(saved===null ? !isPhone : saved==="1", false);
-})();
-// вся полоса сворачивает/разворачивает фильтры, кроме кнопки «Сбросить»
-document.getElementById("fbar").addEventListener("click", e=>{
-  if (e.target.closest("#reset2")) return;
-  setFilters(controls.hidden, true);
-});
+  set(saved===null ? !isPhone : saved==="1", false);
+  bar.addEventListener("click", e=>{ if (e.target.closest(".reset")) return; set(body.hidden, true); });
+}
+collapsible("frBar", "frToggle", "frBox", "franchisesOpen");
+collapsible("fbar", "fToggle", "controls", "filtersOpen");
 
 function activeFilters(){
   const parts = [];
-  if (state.fr.size !== Object.keys(FR).length) parts.push([...state.fr].map(k=>FR[k].name).join(", "));
   if (state.type.size) parts.push([...state.type].map(typeName).join(", "));
   if (state.dates.size) parts.push(calLabel());
   if (state.wd.size) parts.push([1,2,3,4,5,6,0].filter(k=>state.wd.has(k)).map(k=>WD[k]).join(", "));
@@ -537,18 +617,29 @@ function activeFilters(){
 // Календарь
 function toggle(set,k){ set.has(k) ? set.delete(k) : set.add(k); }
 const calBtn=document.getElementById("calBtn"), calPop=document.getElementById("calPop"), calGrid=document.getElementById("calGrid");
-(function buildCal(){
+// календарь открывается на текущем месяце (или на ближайшем, за который есть расписание)
+let calIdx = (()=>{ const n=new Date(), v=n.getFullYear()*100+n.getMonth();
+  const i = MONTHS.findIndex(o=>o.y*100+o.m>=v); return i<0 ? MONTHS.length-1 : i; })();
+function buildCal(){
+  const {y,m} = MONTHS[calIdx];
+  document.getElementById("calTitle").textContent = MON_NOM[m][0].toUpperCase()+MON_NOM[m].slice(1)+" "+y;
+  document.getElementById("calPrev").disabled = calIdx===0;
+  document.getElementById("calNext").disabled = calIdx===MONTHS.length-1;
   let h="";
   ["пн","вт","ср","чт","пт","сб","вс"].forEach((w,i)=>h+=`<span class="h ${i>4?"we":""}">${w}</span>`);
-  const lead=(new Date(2026,9,1).getDay()+6)%7;
+  const lead=(new Date(y,m,1).getDay()+6)%7;
   for(let i=0;i<lead;i++) h+="<span></span>";
-  const now=new Date(), todayD=(now.getFullYear()===2026&&now.getMonth()===9)?now.getDate():0;
-  for(let d=1;d<=31;d++) h+=`<button type="button" class="cal-day ${d===todayD?"today":""}" data-d="${d}" aria-pressed="false"><span class="dn">${d}</span><span class="dc"></span></button>`;
+  const now=new Date(), todayYmd=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
+  for(let d=1;d<=daysIn(y,m);d++){ const ymd=y*10000+(m+1)*100+d;
+    h+=`<button type="button" class="cal-day ${ymd===todayYmd?"today":""}" data-ymd="${ymd}" aria-pressed="false"><span class="dn">${d}</span><span class="dc"></span></button>`; }
   calGrid.innerHTML=h;
-})();
+}
+buildCal();
+document.getElementById("calPrev").onclick=()=>{ if(calIdx>0){calIdx--; buildCal(); updateCal();} };
+document.getElementById("calNext").onclick=()=>{ if(calIdx<MONTHS.length-1){calIdx++; buildCal(); updateCal();} };
 calGrid.addEventListener("click",e=>{
   const b=e.target.closest(".cal-day"); if(!b) return;
-  toggle(state.dates,+b.dataset.d); render();
+  toggle(state.dates,+b.dataset.ymd); render();
 });
 function openCal(open){
   calPop.hidden=!open; calBtn.setAttribute("aria-expanded",open);
@@ -562,20 +653,26 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !calPop.hidden){
 function calLabel(){
   const ds=[...state.dates].sort((a,b)=>a-b);
   if(!ds.length) return "Все даты";
-  if(ds.length<=3) return ds.map(d=>d).join(", ")+" окт";
+  if(ds.length<=3){
+    // «8, 9 окт» или «31 окт, 1 ноя»
+    const groups=[]; ds.forEach(v=>{ const m=Math.floor(v/100)%100-1, d=v%100;
+      const g=groups[groups.length-1]; if(g&&g.m===m) g.d.push(d); else groups.push({m,d:[d]}); });
+    return groups.map(g=>g.d.join(", ")+" "+MON_SHORT[g.m]).join(", ");
+  }
   return `${ds.length} ${plural(ds.length,"дата","даты","дат")}`;
 }
 function updateCal(){
   // считаем игры по дням с учётом всех фильтров, кроме даты
   const cnt={}, upcoming={};
-  DATA.forEach(x=>{ if(passes(x,true,true)){ cnt[x.d]=(cnt[x.d]||0)+1; } if(!isPast(x)) upcoming[x.d]=1; });
+  DATA.forEach(x=>{ if(passes(x,true,true)){ cnt[x.ymd]=(cnt[x.ymd]||0)+1; } if(!isPast(x)) upcoming[x.ymd]=1; });
+  const MG = MON_GEN[MONTHS[calIdx].m];
   calGrid.querySelectorAll(".cal-day").forEach(b=>{
-    const d=+b.dataset.d, n=cnt[d]||0;
-    b.setAttribute("aria-pressed",state.dates.has(d));
+    const ymd=+b.dataset.ymd, d=ymd%100, n=cnt[ymd]||0;
+    b.setAttribute("aria-pressed",state.dates.has(ymd));
     b.classList.toggle("zero",!n);
-    b.classList.toggle("past",!upcoming[d]);
+    b.classList.toggle("past",!upcoming[ymd]);
     b.querySelector(".dc").textContent=n||"·";
-    b.setAttribute("aria-label",`${d} октября, игр: ${n}${upcoming[d]?"":", прошли"}`);
+    b.setAttribute("aria-label",`${d} ${MG}, игр: ${n}${upcoming[ymd]?"":", прошли"}`);
   });
   document.getElementById("calLabel").textContent=calLabel();
   calBtn.setAttribute("aria-pressed",state.dates.size>0);
@@ -588,11 +685,11 @@ function cmp(a,b){ return a.key-b.key || FR_ORDER[a.fr]-FR_ORDER[b.fr]; }
 
 function passes(x,ignoreDate,ignorePast){
   // прошедшие видны, если включён переключатель или эта дата выбрана в календаре
-  const pastOk = ignorePast || state.showPast || !isPast(x) || (!ignoreDate && state.dates.has(x.d));
+  const pastOk = ignorePast || state.showPast || !isPast(x) || (!ignoreDate && state.dates.has(x.ymd));
   return pastOk && state.fr.has(x.fr) &&
     (!state.type.size || state.type.has(x.type) || (state.type.has("champ") && x.champ)) &&
     (!state.wd.size || state.wd.has(x.wd)) &&
-    (ignoreDate || !state.dates.size || state.dates.has(x.d)) &&
+    (ignoreDate || !state.dates.size || state.dates.has(x.ymd)) &&
     (!state.venue || x.venue===state.venue) &&
     (!state.q || (x.game+" "+x.sub+" "+x.venue).toLowerCase().includes(state.q));
 }
@@ -607,6 +704,9 @@ function render(){
     const k=b.dataset.f;
     b.querySelector(".n").textContent = DATA.filter(x=>x.fr===k && (state.showPast || !isPast(x))).length;
   });
+  const allFr = state.fr.size === Object.keys(FR).length;
+  document.getElementById("frSum").textContent = allFr ? "" : "Выбрано: " + Object.keys(FR).filter(k=>state.fr.has(k)).map(k=>FR[k].name).join(", ");
+  document.getElementById("frReset").hidden = allFr;
   const act = activeFilters();
   const fc = document.getElementById("fCount");
   fc.hidden = !act.length; fc.textContent = act.length;
@@ -614,22 +714,22 @@ function render(){
   document.getElementById("reset2").hidden = !act.length;
   document.getElementById("tbl").classList.add("bydate");
   const list = DATA.filter(x=>passes(x)).sort(cmp);
-  const perDay = {}; list.forEach(x=>perDay[x.d]=(perDay[x.d]||0)+1);
+  const perDay = {}; list.forEach(x=>perDay[x.ymd]=(perDay[x.ymd]||0)+1);
 
   const tb = document.getElementById("rows");
   let prevDay = null, html = "";
   for (const x of list){
     const byDate = true;
-    const repeat = byDate && x.d===prevDay;
-    const newday = byDate && x.d!==prevDay;
-    prevDay = x.d;
+    const repeat = byDate && x.ymd===prevDay;
+    const newday = byDate && x.ymd!==prevDay;
+    prevDay = x.ymd;
     const we = x.wd===0||x.wd===6;
     const past = isPast(x);
-    const rel = relDay(x.d);
+    const rel = relDay(x.date);
     const tags = [x.easy?'<span class="tag">лёгкая</span>':"", x.family?'<span class="tag">семейная</span>':"", x.champ?'<span class="tag">чемпионат</span>':"", x.adult?'<span class="tag">18+</span>':"", past?'<span class="tag done">прошла</span>':""].join("");
-    if (newday) html += `<tr class="dayrow"><td colspan="5" class="${rel==="Сегодня"?"today":we?"we":""}">${rel?rel+", "+WD_FULL[x.wd].toLowerCase():WD_FULL[x.wd]}, ${x.d} октября<span>${perDay[x.d]} ${plural(perDay[x.d],"игра","игры","игр")}</span></td></tr>`;
+    if (newday) html += `<tr class="dayrow"><td colspan="5" class="${rel==="Сегодня"?"today":we?"we":""}">${rel?rel+", "+WD_FULL[x.wd].toLowerCase():WD_FULL[x.wd]}, ${x.d} ${MON_GEN[x.m]}<span>${perDay[x.ymd]} ${plural(perDay[x.ymd],"игра","игры","игр")}</span></td></tr>`;
     html += `<tr class="${repeat?"repeat":""} ${newday?"newday":""} ${past?"past":""}">
-      <td class="date"><span class="d">${x.d} окт</span><span class="wd ${rel==="Сегодня"?"today":we?"we":""}">${rel==="Сегодня"?"сегодня":rel==="Завтра"?"завтра":WD[x.wd]}</span><span class="tm">${x.t}</span></td>
+      <td class="date"><span class="d">${fmtShort(x)}</span><span class="wd ${rel==="Сегодня"?"today":we?"we":""}">${rel==="Сегодня"?"сегодня":rel==="Завтра"?"завтра":WD[x.wd]}</span><span class="tm">${x.t}</span></td>
       <td class="frc"><span class="fb ${x.fr}">${FR[x.fr].name}</span></td>
       <td class="game"><span class="t">${esc(x.game)}</span>${tags?`<span class="tags">${tags}</span>`:""}${x.sub?`<div class="s">${esc(x.sub)}</div>`:""}</td>
       <td class="venue">${esc(x.venue)}</td>
@@ -649,12 +749,12 @@ function render(){
   const ep = document.getElementById("emptyPast"); if (ep) ep.onclick = togglePast;
   document.getElementById("shown").textContent = list.length;
   document.getElementById("total").textContent = DATA.length;
-  const days = new Set(list.map(x=>x.d)).size;
+  const days = new Set(list.map(x=>x.ymd)).size;
   document.getElementById("daysInfo").textContent = list.length ? `${days} ${plural(days,"день","дня","дней")} с играми` : "";
 }
-function relDay(d){
+function relDay(date){
   const now = new Date(), t = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const diff = Math.round((new Date(2026,9,d).getTime() - t) / 86400000);
+  const diff = Math.round((date.getTime() - t) / 86400000);
   return diff===0 ? "Сегодня" : diff===1 ? "Завтра" : "";
 }
 // раз в минуту проверяем, не закончилась ли какая-нибудь игра
